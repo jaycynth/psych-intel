@@ -1,0 +1,85 @@
+syntax = "proto3";
+
+package com.julie.psych_intel;
+option java_multiple_files = true;
+
+message Chatroom {
+  string chatroom_id = 1;
+  string chatroom_name =2;
+  int32 max_users = 4;
+
+}
+message ChatMessage {
+  string user_name = 1;
+  string message   = 2;
+  string chatroom_id = 3;
+}
+
+
+message JoinChatroomRequest{
+  // user.User user = 1;
+  string user_name = 3;
+  string chatroom_id = 2;
+  string message   = 4;
+}
+
+
+message ListChatroomUsersRequest{
+  string chatroom_id = 3;
+}
+
+message ListChatroomUsersResponse{
+  repeated string users_list = 2;
+}
+
+
+message ListChatroomRequest{
+  string page_token = 1;
+  int32 page_size = 2;
+}
+
+message ListChatroomResponse{
+  string next_page_token = 1;
+  repeated Chatroom chatroom_list = 2;
+}
+
+message DeleteChatroomRequest {
+  string chatroom_id = 1;
+}
+
+message DeleteChatroomResponse {
+  string success_message = 1;
+}
+
+message CreateChatroomRequest {
+  Chatroom chatroom = 1;
+}
+
+message CreateChatroomResponse {
+  Chatroom chatroom = 1;
+  string success_message = 2;
+}
+
+message JoinChat {
+  string username = 1;
+  string chatroom_id = 2;
+  int64 offline_time_seconds = 3;
+}
+
+service ChatroomAPI {
+  //Creating a chatroom
+  rpc CreateChatroom(CreateChatroomRequest) returns(CreateChatroomResponse){};
+
+  //Join a chatroom
+  rpc JoinChatroom(stream JoinChatroomRequest) returns (stream ChatMessage){};
+
+  //List users in the chatroom
+  rpc ListChatroomUsers(ListChatroomUsersRequest) returns (ListChatroomUsersResponse){};
+
+  //Delete a chatroom
+  rpc DeleteChatroom(DeleteChatroomRequest) returns (DeleteChatroomResponse) {};
+
+  //List all Chatrooms
+  rpc ListChatrooms(ListChatroomRequest) returns (ListChatroomResponse){};
+}
+

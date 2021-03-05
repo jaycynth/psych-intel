@@ -1,0 +1,75 @@
+syntax = "proto3";
+
+package com.julie.psych_intel;
+option java_multiple_files = true;
+
+message User{
+  UserType user_type = 1;
+  string user_id = 2;
+  string user_name = 3;
+  string password = 4;
+  string contact = 5;
+}
+
+enum UserType{
+  USER_TYPE_UNSPECIFIED = 0;
+  PHYSICIAN = 1;
+  CLIENT = 2;
+}
+
+message UserRequest{
+  string user_id = 1;
+}
+
+message DeleteUserResponse{
+  string success_message = 1;
+}
+
+message ListUserRequest{
+  string page_token = 1;
+  int32 page_size = 2;
+}
+
+message ListUserResponse{
+  string next_page_token = 1;
+  repeated User user_list = 2;
+}
+
+message LoginRequest {
+  User user = 1;
+}
+
+message LoginResponse {
+  string jwt_token = 1;
+  User user = 2;
+}
+
+message CreateUserRequest {
+  string password = 1;
+  User user = 2;
+}
+
+
+service UserAPI {
+
+  // Login a user
+  rpc Login (LoginRequest) returns (LoginResponse) {};
+
+  //Creates a new user
+  rpc CreateUser(CreateUserRequest) returns (User){};
+
+  // Deletes a user
+  rpc DeleteUser(UserRequest) returns (DeleteUserResponse){}
+
+  // Gets a User using user id
+  rpc GetUser (UserRequest) returns (User) {};
+
+  // updates user details
+  rpc UpdateUser(UserRequest) returns (User) {};
+
+  //List all users
+  rpc ListUsers (ListUserRequest) returns (ListUserResponse) {};
+
+
+}
+
