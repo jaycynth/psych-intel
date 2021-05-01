@@ -2,6 +2,7 @@ package com.julie.psych_intel
 
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -13,6 +14,10 @@ import io.grpc.ManagedChannel
 import io.grpc.ManagedChannelBuilder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.asExecutor
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.runBlocking
 import java.net.URL
 import java.util.logging.Logger
@@ -31,7 +36,7 @@ class UserFragment : Fragment() {
         logger.info("Connecting to ${url.host}:$port")
 
         val builder = ManagedChannelBuilder.forAddress(url.host, port)
-        if (url.protocol == "https") {
+        if (url.protocol == "http") {
             builder.useTransportSecurity()
         } else {
             builder.usePlaintext()
@@ -45,7 +50,7 @@ class UserFragment : Fragment() {
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        binding =  FragmentUserBinding.inflate(inflater, container, false)
+        binding = FragmentUserBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -72,11 +77,20 @@ class UserFragment : Fragment() {
 
     private fun sendReq(id: String, username: String) = runBlocking {
         try {
-            val request = JoinChatroomRequest.newBuilder().setChatroomId(id)
-                .setUserName(username)
-                .build()
-//            val response = chatroom.joinChatroom(request)
+            val request = flow<JoinChatroomRequest> {
+                JoinChatroomRequest.newBuilder().setChatroomId(id)
+                        .setUserName(username)
+                        .build()
+            }
+
+            val response = chatroom.joinChatroom(request)
+
+            response.collect {
+                        Toast.makeText(requireActivity(), it.message + it.userName, Toast.LENGTH_LONG).show()
+                        Log.d("mymessage", it.message)
+                    }
         } catch (e: Exception) {
+            Toast.makeText(requireActivity(), e.localizedMessage, Toast.LENGTH_LONG).show()
             e.printStackTrace()
         }
     }
