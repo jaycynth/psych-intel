@@ -1,7 +1,10 @@
 syntax = "proto3";
 
-package com.julie.psych_intel;
-option java_multiple_files = true;
+option go_package = "bitbucket.com/jaycynth/psych-intel-api/pkg/api/user";
+option java_package = "com.julie.psych_intel";
+option java_outer_classname = "UserProto";
+
+package user;
 
 message User{
   UserType user_type = 1;

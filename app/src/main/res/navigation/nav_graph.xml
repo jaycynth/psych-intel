@@ -7,7 +7,15 @@
 
     <fragment
         android:id="@+id/userFragment"
-        android:name="com.julie.psych_intel.UserFragment"
+        android:name="com.julie.psych_intel.ui.auth.UserFragment"
         tools:layout="@layout/fragment_user"
-        android:label="UserFragment" />
+        android:label="UserFragment" >
+        <action
+            android:id="@+id/action_userFragment_to_chatFragment"
+            app:destination="@id/chatFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/chatFragment"
+        android:name="com.julie.psych_intel.ui.chat.ChatFragment"
+        android:label="ChatFragment" />
 </navigation>

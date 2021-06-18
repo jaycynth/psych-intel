@@ -1,23 +1,23 @@
-package com.julie.psych_intel
+package com.julie.psych_intel.ui.auth
 
 import android.os.Bundle
 import android.text.TextUtils
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
+import com.julie.psych_intel.ChatroomAPIGrpcKt
+import com.julie.psych_intel.ChatroomProto
+import com.julie.psych_intel.R
 import com.julie.psych_intel.databinding.FragmentUserBinding
 import dagger.hilt.android.AndroidEntryPoint
 import io.grpc.ManagedChannel
 import io.grpc.ManagedChannelBuilder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.asExecutor
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOf
+
 import kotlinx.coroutines.runBlocking
 import java.net.URL
 import java.util.logging.Logger
@@ -34,22 +34,26 @@ class UserFragment : Fragment() {
         val port = if (url.port == -1) url.defaultPort else url.port
 
         logger.info("Connecting to ${url.host}:$port")
+        Toast.makeText(requireActivity(), "Connecting to ${url.host}:$port", Toast.LENGTH_LONG)
+            .show()
 
         val builder = ManagedChannelBuilder.forAddress(url.host, port)
-        if (url.protocol == "http") {
+        if (url.protocol == "https") {
             builder.useTransportSecurity()
         } else {
             builder.usePlaintext()
         }
-
         return builder.executor(Dispatchers.Default.asExecutor()).build()
     }
 
-    // lazy otherwise resources is null
     private val chatroom by lazy { ChatroomAPIGrpcKt.ChatroomAPICoroutineStub(channel()) }
 
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         binding = FragmentUserBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -76,19 +80,21 @@ class UserFragment : Fragment() {
     }
 
     private fun sendReq(id: String, username: String) = runBlocking {
+        Toast.makeText(requireActivity(), channel().getState(true).name, Toast.LENGTH_LONG).show()
+
         try {
-            val request = flow<JoinChatroomRequest> {
-                JoinChatroomRequest.newBuilder().setChatroomId(id)
-                        .setUserName(username)
-                        .build()
+            val chat =
+                ChatroomProto.Chatroom.newBuilder().setChatroomId(id).setChatroomName(username)
+                    .build()
+            val request = ChatroomProto.CreateChatroomRequest.newBuilder().setChatroom(chat).build()
+            val response = chatroom.createChatroom(request)
+
+            Toast.makeText(requireActivity(), response.successMessage, Toast.LENGTH_LONG).show()
+
+            requireActivity().runOnUiThread {
+                findNavController().navigate(R.id.action_userFragment_to_chatFragment)
             }
 
-            val response = chatroom.joinChatroom(request)
-
-            response.collect {
-                        Toast.makeText(requireActivity(), it.message + it.userName, Toast.LENGTH_LONG).show()
-                        Log.d("mymessage", it.message)
-                    }
         } catch (e: Exception) {
             Toast.makeText(requireActivity(), e.localizedMessage, Toast.LENGTH_LONG).show()
             e.printStackTrace()

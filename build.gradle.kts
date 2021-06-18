@@ -8,32 +8,29 @@ buildscript {
         google()
         jcenter()
         maven { url = uri("https://jitpack.io") }
+        maven { url = uri("https://plugins.gradle.org/m2/") }
+
         mavenCentral()
         mavenLocal()
     }
 
     dependencies {
-        classpath("com.android.tools.build:gradle:4.1.2")
-        classpath ("com.google.protobuf:protobuf-gradle-plugin:0.8.15")
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.4.31")
-        classpath ("com.google.dagger:hilt-android-gradle-plugin:2.33-beta")
-        classpath ("androidx.navigation:navigation-safe-args-gradle-plugin:2.3.3")
-
+        classpath(BuildPlugins.gradlePlugin)
+        classpath(BuildPlugins.kotlinPlugin)
+        classpath(BuildPlugins.daggerPlugin)
+        classpath(BuildPlugins.navPlugin)
+        classpath(BuildPlugins.protobufPlugin)
     }
 
 }
-
-ext["hiltVersion"] = "2.33-beta"
-ext["grpcVersion"] = "1.34.0"
-ext["grpcKotlinVersion"] = "0.2.1"
-ext["protobufVersion"] = "3.14.0"
-
 
 allprojects {
     repositories {
         google()
         jcenter()
         maven { url = uri("https://jitpack.io") }
+        maven { url = uri("https://plugins.gradle.org/m2/") }
+
         mavenCentral()
         mavenLocal()
     }
@@ -51,3 +48,12 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
 }
 
 
+
+
+repositories {
+    google()
+    jcenter()
+    maven { url = uri("https://jitpack.io") }
+    mavenCentral()
+    mavenLocal()
+}
