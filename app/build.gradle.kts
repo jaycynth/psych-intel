@@ -8,7 +8,6 @@ plugins {
     id("kotlin-android")
     id("dagger.hilt.android.plugin")
     id("androidx.navigation.safeargs")
-    kotlin("jvm") version "1.2.10"
 
 }
 
@@ -67,13 +66,6 @@ repositories {
 
 
 dependencies {
-
-    implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
-    implementation ("org.jetbrains.kotlin:kotlin-stdlib:1.4.31")
-    implementation("androidx.legacy:legacy-support-v4:1.0.0")
-
-    implementation(kotlin("stdlib"))
-
     implementation(AppLibs.appLibraries)
 
     kapt(AppLibs.kaptLibraries)

@@ -16,8 +16,8 @@ private const val hiltVersion = "2.28.1-alpha"
 private const val lifecycleVersion = "2.2.0"
 private const val hiltViewModelVersion = "1.0.0-alpha02"
 
-private const val grpcVersion = "1.34.0"
-private const val grpcKotlinVersion = "0.2.1"
+const val grpcVersion = "1.34.0"
+const val grpcKotlinVersion = "0.2.1"
 const val protobufVersion = "3.14.0"
 
 

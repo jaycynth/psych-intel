@@ -49,11 +49,11 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
 
 
 
-
 repositories {
     google()
     jcenter()
     maven { url = uri("https://jitpack.io") }
+    maven { url = uri("https://plugins.gradle.org/m2/") }
     mavenCentral()
     mavenLocal()
 }

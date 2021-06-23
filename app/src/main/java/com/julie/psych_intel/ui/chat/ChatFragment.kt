@@ -27,7 +27,6 @@ class ChatFragment : Fragment() {
 
     private val chatMessageList: ArrayList<ChatroomProto.ChatMessage> = arrayListOf()
 
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -60,10 +59,6 @@ class ChatFragment : Fragment() {
 
         setupRecyclerView()
 
-
-        adapter.setItems(chatMessageList)
-
-
         val request = ChatroomProto.JoinChatroomRequest.newBuilder()
             .setChatroomId("5")
             .setUserName("Cynth").build()
@@ -72,6 +67,7 @@ class ChatFragment : Fragment() {
         lifecycleScope.launchWhenStarted {
 
             viewModel.postEvent(request)
+
 
             try {
                 chatroom.joinChatroom(viewModel.events).collect {
