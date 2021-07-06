@@ -23,22 +23,19 @@ const val protobufVersion = "3.14.0"
 
 object BuildPlugins {
     const val gradlePlugin = "com.android.tools.build:gradle:4.1.2"
-    const val kotlinPlugin = "org.jetbrains.kotlin:kotlin-gradle-plugin:1.4.31"
+    const val kotlinPlugin = "org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.72"
     const val daggerPlugin = "com.google.dagger:hilt-android-gradle-plugin:$hiltVersion"
     const val navPlugin = "androidx.navigation:navigation-safe-args-gradle-plugin:$navVersion"
     const val protobufPlugin = "com.google.protobuf:protobuf-gradle-plugin:0.8.15"
-
 }
 
 
 object AppLibs {
-    private const val kotlinStdLib = "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.4.0"
     private const val appcompat = "androidx.appcompat:appcompat:1.2.0"
     private const val materialUI = "com.google.android.material:material:1.3.0"
     private const val constraintLayout = "androidx.constraintlayout:constraintlayout:2.0.4"
     private const val androidXlegacy = "androidx.legacy:legacy-support-v4:1.0.0"
     private const val androidXcore = "androidx.core:core-ktx:1.3.2"
-    private const val androidbyDelegate = "androidx.activity:activity-ktx:1.2.1"
 
 
     private const val navFrag = "androidx.navigation:navigation-fragment-ktx:$navVersion"
@@ -77,7 +74,6 @@ object AppLibs {
 
 
     val appLibraries = arrayListOf<String>().apply {
-        add(kotlinStdLib)
         add(appcompat)
         add(materialUI)
         add(constraintLayout)
@@ -93,8 +89,8 @@ object AppLibs {
         add(livedataLifecycle)
         add(extensionLifecycle)
         add(fragmentLifecycle)
-        add(javaxAnnotation)
-        add(androidbyDelegate)
+//        add(javaxAnnotation)
+
     }
 
 
@@ -112,13 +108,16 @@ object AppLibs {
     }
 
     val apiLibraries = arrayListOf<String>().apply {
-        add(javalite)
-        add(stublite)
+//        add(javalite)
+//        add(stublite)
+
     }
 
     val runtimeLibraries = arrayListOf<String>().apply {
         add(grpcOkhttp)
     }
+
+
 }
 
 fun DependencyHandler.kapt(list: List<String>) {
@@ -133,6 +132,7 @@ fun DependencyHandler.implementation(list: List<String>) {
     }
 }
 
+
 fun DependencyHandler.api(list: List<String>) {
     list.forEach { dependency ->
         add("api", dependency)
@@ -143,6 +143,12 @@ fun DependencyHandler.api(list: List<String>) {
 fun DependencyHandler.runtimeOnly(list: List<String>) {
     list.forEach { dependency ->
         add("runtimeOnly", dependency)
+    }
+}
+
+fun DependencyHandler.compileOnly(list: List<String>) {
+    list.forEach { dependency ->
+        add("compileOnly", dependency)
     }
 }
 

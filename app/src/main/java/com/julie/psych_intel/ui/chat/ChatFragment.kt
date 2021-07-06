@@ -56,18 +56,19 @@ class ChatFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val chatroomId = ChatFragmentArgs.fromBundle(requireArguments()).chatroomId
+        val username = ChatFragmentArgs.fromBundle(requireArguments()).username
 
         setupRecyclerView()
 
         val request = ChatroomProto.JoinChatroomRequest.newBuilder()
-            .setChatroomId("5")
-            .setUserName("Cynth").build()
+            .setChatroomId(chatroomId)
+            .setUserName(username).build()
 
 
         lifecycleScope.launchWhenStarted {
 
             viewModel.postEvent(request)
-
 
             try {
                 chatroom.joinChatroom(viewModel.events).collect {

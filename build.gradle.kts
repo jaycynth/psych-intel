@@ -9,7 +9,6 @@ buildscript {
         jcenter()
         maven { url = uri("https://jitpack.io") }
         maven { url = uri("https://plugins.gradle.org/m2/") }
-
         mavenCentral()
         mavenLocal()
     }
@@ -17,9 +16,9 @@ buildscript {
     dependencies {
         classpath(BuildPlugins.gradlePlugin)
         classpath(BuildPlugins.kotlinPlugin)
+        classpath(BuildPlugins.protobufPlugin)
         classpath(BuildPlugins.daggerPlugin)
         classpath(BuildPlugins.navPlugin)
-        classpath(BuildPlugins.protobufPlugin)
     }
 
 }
@@ -36,24 +35,10 @@ allprojects {
     }
 }
 
-tasks.withType<Test> {
-    useJUnitPlatform()
-}
 
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-    kotlinOptions {
-        freeCompilerArgs = listOf("-Xjsr305=strict")
-        jvmTarget = "11"
-    }
+
+tasks.register("clean", Delete::class) {
+    delete(rootProject.buildDir)
 }
 
 
-
-repositories {
-    google()
-    jcenter()
-    maven { url = uri("https://jitpack.io") }
-    maven { url = uri("https://plugins.gradle.org/m2/") }
-    mavenCentral()
-    mavenLocal()
-}

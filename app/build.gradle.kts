@@ -2,13 +2,11 @@ import com.google.protobuf.gradle.*
 
 plugins {
     id("com.android.application")
-    kotlin("android")
     id("com.google.protobuf")
-    id("kotlin-kapt")
     id("kotlin-android")
+    id("kotlin-kapt")
     id("dagger.hilt.android.plugin")
     id("androidx.navigation.safeargs")
-
 }
 
 
@@ -60,12 +58,13 @@ android {
 }
 
 
-repositories {
-    mavenCentral()
-}
-
-
 dependencies {
+    implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
+
+    api("io.grpc:grpc-kotlin-stub:0.2.1") {
+        exclude(group = "javax.annotation", module = "javax.annotation-api")
+    }
+
     implementation(AppLibs.appLibraries)
 
     kapt(AppLibs.kaptLibraries)
