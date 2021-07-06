@@ -61,12 +61,11 @@ android {
 dependencies {
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
 
-    api("io.grpc:grpc-kotlin-stub:0.2.1") {
+    api("io.grpc:grpc-kotlin-stub:$grpcKotlinVersion") {
         exclude(group = "javax.annotation", module = "javax.annotation-api")
     }
 
     implementation(AppLibs.appLibraries)
-
     kapt(AppLibs.kaptLibraries)
     api(AppLibs.apiLibraries)
     runtimeOnly(AppLibs.runtimeLibraries)

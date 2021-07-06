@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.julie.psych_intel.ChatroomProto
 import com.julie.psych_intel.databinding.ChatMessageItemBinding
 
-class ChatMessageAdapter() :
+class ChatMessageAdapter :
     RecyclerView.Adapter<ChatMessageAdapter.ChatMessageViewHolder>() {
 
     private val items = ArrayList<ChatroomProto.ChatMessage>()

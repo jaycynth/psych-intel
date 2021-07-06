@@ -1,4 +1,4 @@
-package com.julie.psych_intel.ui.chat
+package com.julie.psych_intel.ui.chatroom
 
 import androidx.lifecycle.ViewModel
 import com.julie.psych_intel.ChatroomProto

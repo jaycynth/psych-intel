@@ -1,25 +1,26 @@
-package com.julie.psych_intel.ui.chat
+package com.julie.psych_intel.ui.chatroom
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import com.julie.psych_intel.*
+import com.julie.psych_intel.ChatroomAPIGrpcKt
+import com.julie.psych_intel.ChatroomProto
 import com.julie.psych_intel.adapters.ChatMessageAdapter
 import com.julie.psych_intel.databinding.FragmentChatBinding
+import com.julie.psych_intel.remote.GrpcService
 import dagger.hilt.android.AndroidEntryPoint
-import io.grpc.ManagedChannel
-import io.grpc.ManagedChannelBuilder
-import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.*
-import java.net.URL
+import kotlinx.coroutines.flow.collect
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class ChatFragment : Fragment() {
+
+    @Inject
+    lateinit var grpcService:GrpcService
 
     private lateinit var binding: FragmentChatBinding
     private lateinit var adapter: ChatMessageAdapter
@@ -36,23 +37,7 @@ class ChatFragment : Fragment() {
         return binding.root
     }
 
-    private fun channel(): ManagedChannel {
-        val url = URL(resources.getString(R.string.server_url))
-        val port = if (url.port == -1) url.defaultPort else url.port
-
-        Toast.makeText(requireActivity(), "Connecting to ${url.host}:$port", Toast.LENGTH_LONG)
-            .show()
-
-        val builder = ManagedChannelBuilder.forAddress(url.host, port)
-        if (url.protocol == "https") {
-            builder.useTransportSecurity()
-        } else {
-            builder.usePlaintext()
-        }
-        return builder.executor(Dispatchers.Default.asExecutor()).build()
-    }
-
-    private val chatroom by lazy { ChatroomAPIGrpcKt.ChatroomAPICoroutineStub(channel()) }
+    private val chatroom by lazy { ChatroomAPIGrpcKt.ChatroomAPICoroutineStub(grpcService.channel()) }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -90,9 +75,9 @@ class ChatFragment : Fragment() {
 
 
                 val sendReq = ChatroomProto.JoinChatroomRequest.newBuilder()
-                    .setChatroomId("5")
+                    .setChatroomId(chatroomId)
                     .setMessage(msg)
-                    .setUserName("Cynth").build()
+                    .setUserName(username).build()
 
                 lifecycleScope.launchWhenStarted {
                     viewModel.postEvent(sendReq)
