@@ -27,9 +27,11 @@ android {
         if (serverUrl != null) {
             resValue("string", "server_url", serverUrl!!)
         } else {
-            resValue("string", "server_url", "http://192.168.0.21:8080")
+            resValue("string", "server_url", "http://192.168.5.160:8080")
+            // resValue("string", "server_url", "http://192.168.0.21:8080")
         }
     }
+
     buildFeatures {
         dataBinding = true
     }
