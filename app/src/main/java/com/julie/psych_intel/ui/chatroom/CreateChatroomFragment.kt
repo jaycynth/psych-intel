@@ -7,6 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.julie.psych_intel.ChatroomAPIGrpcKt
 import com.julie.psych_intel.ChatroomProto
@@ -21,11 +23,7 @@ class CreateChatroomFragment : Fragment() {
 
     private lateinit var binding: FragmentCreateChatroomBinding
 
-    @Inject
-    lateinit var grpcService: GrpcService
-
-    private val chatroom by lazy { ChatroomAPIGrpcKt.ChatroomAPICoroutineStub(grpcService.channel()) }
-
+    private val viewModel: ChatViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -57,24 +55,26 @@ class CreateChatroomFragment : Fragment() {
         }
     }
 
-    private fun sendReq(id: String, username: String) = runBlocking {
-        try {
-            val chat =
-                ChatroomProto.Chatroom.newBuilder().setChatroomId(id).setChatroomName(username)
-                    .build()
-            val request = ChatroomProto.CreateChatroomRequest.newBuilder().setChatroom(chat).build()
-            val response = chatroom.createChatroom(request)
+    private fun sendReq(id: String, username: String) {
 
-            Toast.makeText(requireActivity(), response.successMessage, Toast.LENGTH_LONG).show()
+        val chat =
+            ChatroomProto.Chatroom.newBuilder().setChatroomId(id).setChatroomName(username)
+                .build()
 
-            requireActivity().runOnUiThread {
-                val action = CreateChatroomFragmentDirections.actionCreateChatroomFragmentToChatFragment(id,username)
+        val request = ChatroomProto.CreateChatroomRequest.newBuilder().setChatroom(chat).build()
+
+        viewModel.createChatroom(request).observe(viewLifecycleOwner, Observer {
+            if (it.chatroom != null) {
+                Toast.makeText(requireActivity(), it.successMessage, Toast.LENGTH_LONG).show()
+
+                val action =
+                    CreateChatroomFragmentDirections.actionCreateChatroomFragmentToUserFragment()
+                        .setChatroomId(it.chatroom.chatroomId)
                 findNavController().navigate(action)
             }
 
-        } catch (e: Exception) {
-            Toast.makeText(requireActivity(), e.localizedMessage, Toast.LENGTH_LONG).show()
-            e.printStackTrace()
-        }
+        })
+
+
     }
 }
