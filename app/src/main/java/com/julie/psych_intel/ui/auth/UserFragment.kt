@@ -28,8 +28,14 @@ class UserFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.addChatroomBtn.setOnClickListener {
-            findNavController().navigate(R.id.action_userFragment_to_createChatroomFragment)
+        val chatroomId =  UserFragmentArgs.fromBundle(requireArguments()).chatroomId
+
+        if(chatroomId != "null"){
+            binding.chatroomId.setText(chatroomId)
+        }
+
+        binding.viewChatroomsBtn.setOnClickListener {
+            findNavController().navigate(R.id.action_userFragment_to_chatroomListFragment)
         }
 
         binding.submitBtn.setOnClickListener {
