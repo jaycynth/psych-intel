@@ -1,8 +1,10 @@
-package com.julie.psych_intel.remote
+package com.julie.psych_intel.data.remote
 
 import android.content.Context
 import android.widget.Toast.*
 import com.julie.psych_intel.R
+import com.julie.psych_intel.data.interceptors.NetworkStatusInterceptor
+import com.julie.psych_intel.utils.ConnectionManager
 import io.grpc.ManagedChannel
 import io.grpc.ManagedChannelBuilder
 import kotlinx.coroutines.Dispatchers
@@ -27,6 +29,7 @@ class GrpcService(val context: Context) {
         } else {
             builder.usePlaintext()
         }
+        builder.intercept(NetworkStatusInterceptor(ConnectionManager(context)))
         return builder.executor(Dispatchers.Default.asExecutor()).build()
     }
 }

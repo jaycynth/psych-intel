@@ -9,12 +9,12 @@ import com.julie.psych_intel.databinding.ChatMessageItemBinding
 class ChatMessageAdapter :
     RecyclerView.Adapter<ChatMessageAdapter.ChatMessageViewHolder>() {
 
+    //TODO Diff Util
     private val items = ArrayList<ChatroomProto.ChatMessage>()
 
     fun setItems(items: ArrayList<ChatroomProto.ChatMessage>) {
         this.items.clear()
         this.items.addAll(items)
-        notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChatMessageViewHolder {

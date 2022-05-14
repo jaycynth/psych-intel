@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.julie.psych_intel.ChatroomProto
 import com.julie.psych_intel.adapters.ChatMessageAdapter
@@ -16,10 +16,9 @@ import kotlinx.coroutines.flow.collect
 @AndroidEntryPoint
 class ChatFragment : Fragment() {
 
-
     private lateinit var binding: FragmentChatBinding
     private lateinit var adapter: ChatMessageAdapter
-    private val viewModel: ChatViewModel by viewModels()
+    private val viewModel: ChatViewModel by activityViewModels()
 
     private val chatMessageList: ArrayList<ChatroomProto.ChatMessage> = arrayListOf()
 
@@ -40,13 +39,19 @@ class ChatFragment : Fragment() {
 
         setupRecyclerView()
 
-        val request = ChatroomProto.JoinChatroomRequest.newBuilder()
-            .setChatroomId(chatroomId)
-            .setUserName(username).build()
 
-
-        lifecycleScope.launchWhenStarted {
-            sendObserveMessageFlow(request)
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+            try {
+                viewModel.joinChatroom(viewModel.events)
+                    .collect {
+                        println("MYMES" + it.message)
+                        requireActivity().runOnUiThread {
+                            addMessageList(it)
+                        }
+                    }
+            } catch (e: Throwable) {
+                println("Exception from the flow: $e")
+            }
         }
 
 
@@ -61,25 +66,9 @@ class ChatFragment : Fragment() {
                     .setMessage(msg)
                     .setUserName(username).build()
 
-                lifecycleScope.launchWhenStarted {
-                    sendObserveMessageFlow(sendReq)
-                }
+                viewModel.postEvent(sendReq)
 
             }
-        }
-    }
-
-
-    private suspend fun sendObserveMessageFlow(request: ChatroomProto.JoinChatroomRequest) {
-        try {
-            viewModel.joinChatroom(request).collect {
-                println("MYMES" + it.message)
-                requireActivity().runOnUiThread {
-                    addMessageList(it)
-                }
-            }
-        } catch (e: Throwable) {
-            println("Exception from the flow: $e")
         }
     }
 
@@ -87,7 +76,6 @@ class ChatFragment : Fragment() {
     private fun addMessageList(chatMessage: ChatroomProto.ChatMessage) {
         chatMessageList.add(chatMessage)
         adapter.setItems(chatMessageList)
-        adapter.notifyDataSetChanged()
     }
 
 

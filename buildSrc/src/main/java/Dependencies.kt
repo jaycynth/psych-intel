@@ -12,8 +12,8 @@ object Apps {
 
 private const val navVersion = "2.3.3"
 private const val coroutineVersion = "1.4.1"
-private const val hiltVersion = "2.28.1-alpha"
-private const val lifecycleVersion = "2.2.0"
+private const val hiltVersion = "2.35"
+private const val lifecycleVersion = "2.4.0-alpha02"
 private const val hiltViewModelVersion = "1.0.0-alpha02"
 
 const val grpcVersion = "1.34.0"
@@ -23,7 +23,7 @@ const val protobufVersion = "3.14.0"
 
 object BuildPlugins {
     const val gradlePlugin = "com.android.tools.build:gradle:4.1.2"
-    const val kotlinPlugin = "org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.72"
+    const val kotlinPlugin = "org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.10"
     const val daggerPlugin = "com.google.dagger:hilt-android-gradle-plugin:$hiltVersion"
     const val navPlugin = "androidx.navigation:navigation-safe-args-gradle-plugin:$navVersion"
     const val protobufPlugin = "com.google.protobuf:protobuf-gradle-plugin:0.8.15"
@@ -35,7 +35,7 @@ object AppLibs {
     private const val materialUI = "com.google.android.material:material:1.3.0"
     private const val constraintLayout = "androidx.constraintlayout:constraintlayout:2.0.4"
     private const val androidXlegacy = "androidx.legacy:legacy-support-v4:1.0.0"
-    private const val androidXcore = "androidx.core:core-ktx:1.3.2"
+    private const val androidXcore = "androidx.core:core-ktx:1.5.0"
 
 
     private const val navFrag = "androidx.navigation:navigation-fragment-ktx:$navVersion"
@@ -48,17 +48,15 @@ object AppLibs {
 
 
     private const val hiltAndroid = "com.google.dagger:hilt-android:$hiltVersion"
-    private const val hiltAndroidCompiler = "com.google.dagger:hilt-android-compiler:$hiltVersion"
-    private const val hiltViewModel = "androidx.hilt:hilt-lifecycle-viewmodel:$hiltViewModelVersion"
-    private const val hiltCompiler = "androidx.hilt:hilt-compiler:$hiltViewModelVersion"
+    private const val hiltCompiler = "com.google.dagger:hilt-compiler:$hiltVersion"
 
 
     private const val viewmodelLifecycle =
         "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion"
     private const val livedataLifecycle =
         "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion"
-    private const val extensionLifecycle = "androidx.lifecycle:lifecycle-extensions:2.2.0"
     private const val fragmentLifecycle = "androidx.fragment:fragment-ktx:1.2.4"
+    private const val lifecyclesOnly = "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion"
 
     //grpc
     private const val javaxAnnotation = "javax.annotation:javax.annotation-api:1.3.2"
@@ -66,9 +64,16 @@ object AppLibs {
     private const val stublite = "io.grpc:grpc-kotlin-stub-lite:${grpcKotlinVersion}"
     private const val grpcOkhttp = "io.grpc:grpc-okhttp:${grpcVersion}"
 
+    //okhttp
+    private const val okhttpInterceptor = "com.squareup.okhttp3:logging-interceptor:4.9.0"
+
+    //test libraries
+    private const val junit = "junit:junit:4.13.2"
+    private const val extJUnit = "androidx.test.ext:junit:1.1.2"
+    private const val espressoCore = "androidx.test.espresso:espresso-core:3.3.0"
+
 
     val kaptLibraries = arrayListOf<String>().apply {
-        add(hiltAndroidCompiler)
         add(hiltCompiler)
     }
 
@@ -84,19 +89,14 @@ object AppLibs {
         add(coroutinesCore)
         add(coroutinesAndroid)
         add(hiltAndroid)
-        add(hiltViewModel)
         add(viewmodelLifecycle)
         add(livedataLifecycle)
-        add(extensionLifecycle)
+        add(lifecyclesOnly)
         add(fragmentLifecycle)
-//        add(javaxAnnotation)
-
+        add(javaxAnnotation)
+        add(okhttpInterceptor)
     }
 
-
-    private const val junit = "junit:junit:4.13.2"
-    private const val extJUnit = "androidx.test.ext:junit:1.1.2"
-    private const val espressoCore = "androidx.test.espresso:espresso-core:3.3.0"
 
     val androidTestLibraries = arrayListOf<String>().apply {
         add(extJUnit)
@@ -108,9 +108,8 @@ object AppLibs {
     }
 
     val apiLibraries = arrayListOf<String>().apply {
-//        add(javalite)
-//        add(stublite)
-
+        //add(javalite)
+        //add(stublite)
     }
 
     val runtimeLibraries = arrayListOf<String>().apply {

@@ -6,15 +6,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import com.julie.psych_intel.ChatroomProto
 import com.julie.psych_intel.R
 import com.julie.psych_intel.databinding.FragmentUserBinding
+import com.julie.psych_intel.ui.chatroom.ChatViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class UserFragment : Fragment() {
 
     private lateinit var binding: FragmentUserBinding
+    private val viewModel: ChatViewModel by activityViewModels()
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -28,9 +33,9 @@ class UserFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val chatroomId =  UserFragmentArgs.fromBundle(requireArguments()).chatroomId
+        val chatroomId = UserFragmentArgs.fromBundle(requireArguments()).chatroomId
 
-        if(chatroomId != "null"){
+        if (chatroomId != "null") {
             binding.chatroomId.setText(chatroomId)
         }
 
@@ -50,8 +55,18 @@ class UserFragment : Fragment() {
                     binding.chatroomUsername.error = "Enter chatroom username"
                 }
                 else -> {
+
+                    val request = ChatroomProto.JoinChatroomRequest.newBuilder()
+                        .setChatroomId(id)
+                        .setUserName(username).build()
+
+                    viewModel.postEvent(request)
+
                     val action =
-                        UserFragmentDirections.actionUserFragmentToChatFragment(id, username)
+                        UserFragmentDirections.actionUserFragmentToChatFragment(
+                            id,
+                            username
+                        )
                     findNavController().navigate(action)
                 }
             }

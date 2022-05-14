@@ -13,7 +13,6 @@ class ChatroomsAdapter : RecyclerView.Adapter<ChatroomsAdapter.ChatroomsViewHold
     fun setItems(items: List<ChatroomProto.Chatroom>) {
         this.items.clear()
         this.items.addAll(items)
-        notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChatroomsViewHolder {

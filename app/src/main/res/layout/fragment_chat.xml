@@ -17,9 +17,11 @@
             android:id="@+id/messages_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_above="@id/message_entry_holder"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
         <LinearLayout
+            android:id="@+id/message_entry_holder"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -39,8 +41,6 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Send"/>
-
-
         </LinearLayout>
     </RelativeLayout>
 

@@ -1,17 +1,12 @@
 package com.julie.psych_intel.repositories
 
 import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.liveData
-import androidx.navigation.fragment.findNavController
 import com.julie.psych_intel.ChatroomAPIGrpcKt
 import com.julie.psych_intel.ChatroomProto
-import com.julie.psych_intel.remote.GrpcService
-import com.julie.psych_intel.ui.chatroom.CreateChatroomFragmentDirections
-import kotlinx.coroutines.coroutineScope
+import com.julie.psych_intel.data.remote.GrpcService
 import kotlinx.coroutines.flow.*
 import javax.inject.Inject
-import kotlin.coroutines.coroutineContext
 
 class ChatroomRepository @Inject constructor(
     val grpcService: GrpcService
@@ -30,9 +25,8 @@ class ChatroomRepository @Inject constructor(
     }
 
 
-    fun getChatrooms() = liveData {
+    fun getChatrooms(request: ChatroomProto.ListChatroomRequest) = liveData {
         try {
-            val request = ChatroomProto.ListChatroomRequest.newBuilder().build()
             val response = chatroom.listChatrooms(request)
             emit(response.chatroomListList)
         } catch (e: Exception) {
@@ -41,16 +35,13 @@ class ChatroomRepository @Inject constructor(
     }
 
 
-    fun joinChatroom(req: ChatroomProto.JoinChatroomRequest) = flow {
+    fun joinChatroom(req: SharedFlow<ChatroomProto.JoinChatroomRequest>) : Flow<ChatroomProto.ChatMessage> {
         try {
-            val response = chatroom.joinChatroom(flowOf(req))
-            response.collect {
-                emit(it)
-            }
-
+            return chatroom.joinChatroom(req)
         } catch (e: Exception) {
             e.message?.let { Log.d("RESPONSE", it) }
         }
+        return emptyFlow()
     }
 
 }

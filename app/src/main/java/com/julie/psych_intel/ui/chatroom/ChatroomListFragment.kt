@@ -7,14 +7,10 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import com.julie.psych_intel.ChatroomAPIGrpcKt
 import com.julie.psych_intel.ChatroomProto
 import com.julie.psych_intel.adapters.ChatroomsAdapter
 import com.julie.psych_intel.databinding.FragmentChatroomListBinding
-import com.julie.psych_intel.remote.GrpcService
 import dagger.hilt.android.AndroidEntryPoint
-import io.grpc.Grpc
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class ChatroomListFragment : Fragment() {
@@ -36,8 +32,9 @@ class ChatroomListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupRecyclerview()
+        val request = ChatroomProto.ListChatroomRequest.newBuilder().build()
 
-        viewModel.getChatrooms().observe(viewLifecycleOwner, Observer{
+        viewModel.getChatrooms(request).observe(viewLifecycleOwner, Observer{
             adapter.setItems(it)
         })
     }

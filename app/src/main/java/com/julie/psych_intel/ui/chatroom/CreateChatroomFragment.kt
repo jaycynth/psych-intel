@@ -10,13 +10,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
-import com.julie.psych_intel.ChatroomAPIGrpcKt
 import com.julie.psych_intel.ChatroomProto
 import com.julie.psych_intel.databinding.FragmentCreateChatroomBinding
-import com.julie.psych_intel.remote.GrpcService
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.runBlocking
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class CreateChatroomFragment : Fragment() {
